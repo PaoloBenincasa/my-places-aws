@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "myplacesaws",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authmyplacesaws2a85822c"
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": []
+  }
+}

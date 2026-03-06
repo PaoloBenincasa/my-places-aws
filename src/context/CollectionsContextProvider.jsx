@@ -1,0 +1,92 @@
+import { useState, useEffect } from "react";
+import CollectionsContext from "./CollectionsContext";
+
+// --- INIZIO IMPORT AWS ---
+import { generateClient } from 'aws-amplify/api';
+import { listCollections } from '../graphql/queries';
+import { deleteCollection as deleteCollectionMutation } from '../graphql/mutations';
+// --- FINE IMPORT AWS ---
+
+const client = generateClient();
+
+const CollectionsContextProvider = ({ children }) => {
+  const [collections, setCollections] = useState([]);
+  const [selectedCollections, setSelectedCollections] = useState([]);
+
+  // Fetch delle raccolte al montaggio del componente
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        // Chiamata ad AWS AppSync (GraphQL) per leggere le raccolte
+        const response = await client.graphql({
+          query: listCollections
+        });
+
+        const data = response.data.listCollections.items;
+
+        setCollections(data);
+        
+        // AUTO-SELEZIONE: Inizializziamo selectedCollections con tutti gli ID 
+        // delle raccolte caricate per rendere subito visibili i marker sulla mappa
+        if (data && data.length > 0) {
+          const allIds = data.map(collection => collection.id);
+          setSelectedCollections(allIds);
+        }
+      } catch (error) {
+        console.error("Errore nel recuperare le raccolte da AWS:", error);
+      }
+    };
+
+    fetchCollections();
+  }, []);
+
+  // Gestisce la selezione e deselezione di una raccolta (checkbox sulla mappa)
+  const handleCollectionChange = (collectionId) => {
+    setSelectedCollections((prev) => {
+      if (prev.includes(collectionId)) {
+        // Se l'id è già presente, lo rimuovo (deseleziono)
+        return prev.filter((id) => id !== collectionId);
+      } else {
+        // Altrimenti lo aggiungo (seleziono)
+        return [...prev, collectionId];
+      }
+    });
+  };
+
+  // Cancella la collezione dal database e aggiorna gli stati locali
+  const handleDeleteCollection = async (id) => {
+    const confirmDelete = window.confirm("Sei sicuro di voler eliminare questa raccolta?");
+    
+    if (confirmDelete) {
+      try {
+        // Chiamata ad AWS per eliminare la raccolta
+        await client.graphql({
+          query: deleteCollectionMutation,
+          variables: { input: { id: id } }
+        });
+        
+        // Rimuovo la raccolta dall'elenco generale
+        setCollections((prev) => prev.filter((c) => c.id !== id));
+        // La rimuovo anche dalle selezionate se presente
+        setSelectedCollections((prev) => prev.filter((collectionId) => collectionId !== id));
+        
+      } catch (error) {
+        console.error("Errore nell'eliminazione della raccolta su AWS:", error);
+      }
+    }
+  };
+
+  return (
+    <CollectionsContext.Provider value={{
+      collections,
+      setCollections, // Utile per aggiornamenti manuali da altri componenti
+      selectedCollections,
+      handleCollectionChange,
+      handleDeleteCollection
+    }}>
+      {children}
+    </CollectionsContext.Provider>
+  );
+}
+
+export default CollectionsContextProvider;

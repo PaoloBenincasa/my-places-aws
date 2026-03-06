@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-myplacesaws-dev-97fc0-authRole",
+      "UnauthRoleArn": "arn:aws:iam::050617084337:role/amplify-myplacesaws-dev-97fc0-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::050617084337:role/amplify-myplacesaws-dev-97fc0-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-myplacesaws-dev-97fc0-deployment",
+      "UnauthRoleName": "amplify-myplacesaws-dev-97fc0-unauthRole",
+      "StackName": "amplify-myplacesaws-dev-97fc0",
+      "StackId": "arn:aws:cloudformation:eu-central-1:050617084337:stack/amplify-myplacesaws-dev-97fc0/7ce8fe70-1884-11f1-9075-0ac4fcf55fd1",
+      "AmplifyAppId": "d9ec8uio59eor"
+    },
+    "categories": {
+      "auth": {
+        "myplacesaws2a85822c": {}
+      },
+      "api": {
+        "myplacesaws": {}
+      }
+    }
+  }
+}

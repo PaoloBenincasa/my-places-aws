@@ -1,0 +1,16 @@
+type Collection @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  name: String!
+  color: String
+  exclusive_with: [String]
+  places: [SavedPlace] @hasMany(indexName: "byCollection", fields: ["id"])
+}
+
+type SavedPlace @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  name: String!
+  latitude: Float!
+  longitude: Float!
+  collectionID: ID! @index(name: "byCollection")
+  collection: Collection @belongsTo(fields: ["collectionID"])
+}

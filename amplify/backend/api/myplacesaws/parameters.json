@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "myplacesaws",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authmyplacesaws2a85822c",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

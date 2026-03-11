@@ -24,13 +24,7 @@ function App() {
               {/* Qui viene caricata la TUA vera applicazione! */}
               <AppRoutes />
 
-              {/* Tasto di emergenza temporaneo per farti fare il logout finché non lo mettiamo nella Navbar */}
-              <button 
-                onClick={signOut} 
-                style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000, padding: '10px', background: 'red', color: 'white', borderRadius: '8px', cursor: 'pointer' }}
-              >
-                Esci da AWS
-              </button>
+            
 
             </BrowserRouter>
           </SearchContextProvider>

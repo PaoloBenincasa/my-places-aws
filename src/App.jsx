@@ -1,6 +1,6 @@
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 
 // Importa i tuoi Context (Quelli che sono sopravvissuti alla pulizia!)
 import CollectionsContextProvider from './context/CollectionsContextProvider';

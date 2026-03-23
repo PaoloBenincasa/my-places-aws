@@ -103,7 +103,7 @@ export default function AppHome() {
                         inizia!
                     </button>
                 </div>
-                <ToastContainer position="bottom-right"
+                {/* <ToastContainer position="bottom-right"
                     autoClose={2000}
                     hideProgressBar={false}
                     newestOnTop={false}
@@ -113,7 +113,7 @@ export default function AppHome() {
                     draggable
                     pauseOnHover
                     theme="light"
-                />
+                /> */}
             </div>
         </>
     )

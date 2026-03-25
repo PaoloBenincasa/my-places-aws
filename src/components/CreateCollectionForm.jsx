@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import CollectionsContext from '../context/CollectionsContext';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 import { generateClient } from 'aws-amplify/api';
 import { createCollection as createCollectionMutation } from '../graphql/mutations'; 
@@ -105,7 +105,7 @@ const CreateCollectionForm = () => {
                 </div>
             </form>
 
-            <ToastContainer position="bottom-right"
+            {/* <ToastContainer position="bottom-right"
                 autoClose={2000}
                 hideProgressBar={false}
                 newestOnTop={false}
@@ -115,7 +115,7 @@ const CreateCollectionForm = () => {
                 draggable
                 pauseOnHover
                 theme="light"
-            />
+            /> */}
         </div>
     );
 };

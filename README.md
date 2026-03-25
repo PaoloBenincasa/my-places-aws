@@ -1,16 +1,61 @@
-# React + Vite
+# 🗺️ My Places - AWS Serverless Travel Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**🔗 [Guarda l'app live qui!](https://main.d36vvl92r6xjti.amplifyapp.com)**
 
-Currently, two official plugins are available:
+Un'applicazione web full-stack progettata per i viaggiatori che vogliono tenere traccia dei luoghi visitati, organizzarli in raccolte personalizzate e visualizzarli su una mappa interattiva. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Il progetto unisce un'interfaccia utente moderna e reattiva a un'infrastruttura cloud **100% serverless**, sicura e scalabile ospitata su Amazon Web Services (AWS).
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Funzionalità Principali
 
-## Expanding the ESLint configuration
+* 🔐 **Autenticazione Sicura:** Registrazione, login e gestione delle sessioni tramite AWS Cognito.
+* 📍 **Mappa Interattiva:** Ricerca di luoghi reali (tramite OpenStreetMap) e salvataggio delle coordinate.
+* 🗂️ **Raccolte Personalizzate:** Organizzazione dei luoghi in categorie con colori personalizzati e filtri dinamici.
+* ⚡ **Aggiornamenti in Tempo Reale:** UI reattiva che si aggiorna istantaneamente all'aggiunta o all'eliminazione di un luogo, senza ricaricare la pagina.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 💻 Web Development (Frontend)
+
+L'interfaccia utente è stata sviluppata puntando su performance, pulizia del codice e responsività.
+
+* **Core:** React.js (inizializzato con Vite per build ultra-veloci).
+* **Gestione dello Stato:** Utilizzo combinato di Hooks (`useState`, `useEffect`) e **Context API** per gestire lo stato globale delle raccolte in modo efficiente.
+* **Routing:** `react-router-dom` per una navigazione fluida (Single Page Application).
+* **Mappe e Geocoding:** Integrazione di **Leaflet.js** (`react-leaflet`) per la mappa interattiva e utilizzo dell'API gratuita **OpenStreetMap (Nominatim)** per la ricerca degli indirizzi.
+* **Styling:** Bootstrap 5 per il layout e la responsività, unito a CSS personalizzato.
+
+---
+
+## ☁️ Architettura Cloud AWS (Backend)
+
+Il backend è stato progettato garantendo alta disponibilità, scalabilità automatica, sicurezza e costi ottimizzati (Pay-as-you-go).
+
+* **AWS Amplify Hosting (CI/CD):** Distribuzione automatizzata del frontend con una pipeline collegata direttamente al branch `main`.
+* **Amazon Cognito:** Gestione completa dell'identità degli utenti (User Pools) integrata nei componenti React tramite `@aws-amplify/ui-react`.
+* **AWS AppSync (GraphQL):** API GraphQL gestita per la comunicazione tra frontend e database, ottimizzata per recuperare solo i dati strettamente necessari.
+* **Amazon DynamoDB:** Database NoSQL altamente performante per memorizzare i dati degli utenti.
+
+### 🗄️ Modellazione dei Dati e Sicurezza
+
+Il database sfrutta direttive GraphQL avanzate per garantire isolamento dei dati e query efficienti:
+
+```graphql
+type Collection @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  name: String!
+  color: String
+  exclusive_with: [String]
+  places: [SavedPlace] @hasMany(indexName: "byCollection", fields: ["id"])
+}
+
+type SavedPlace @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  name: String!
+  latitude: Float!
+  longitude: Float!
+  collectionID: ID! @index(name: "byCollection")
+  collection: Collection @belongsTo(fields: ["collectionID"])
+}

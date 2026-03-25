@@ -3,15 +3,13 @@ import CollectionsContext from '../context/CollectionsContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// --- INIZIO IMPORT AWS ---
 import { generateClient } from 'aws-amplify/api';
 import { createCollection as createCollectionMutation } from '../graphql/mutations'; 
-// --- FINE IMPORT AWS ---
 
 const client = generateClient();
 
 const CreateCollectionForm = () => {
-    // Estraiamo anche handleCollectionChange dal Context per poter selezionare la nuova raccolta
+    // estraggo handleCollectionChange dal contect per poter selezionare la nuova raccolta
     const { collections, setCollections, handleCollectionChange } = useContext(CollectionsContext);
     const [collectionName, setCollectionName] = useState("");
     const [collectionColor, setCollectionColor] = useState("#000000");
@@ -34,14 +32,14 @@ const CreateCollectionForm = () => {
 
             const nuovaRaccolta = response.data.createCollection;
 
-            // 1. Aggiorniamo l'elenco locale delle raccolte
+            // 1.aggiorno elenco locale collections
             setCollections(prevCollections => [...prevCollections, nuovaRaccolta]);
             
-            // 2. AUTO-SELEZIONE: Attiviamo subito la nuova raccolta sulla mappa
-            // Chiamiamo la funzione del context passando l'ID della nuova raccolta
+            // 2.  attivo subito la nuova raccolta sulla mappa
+            // chiamo la funzione del context passando l'ID della nuova raccolta
             handleCollectionChange(nuovaRaccolta.id);
 
-            // 3. Reset dei campi del form
+            // 3. resetto campi del form
             setCollectionName("");
             setCollectionColor("#000000");
             setExclusiveCollections([]);

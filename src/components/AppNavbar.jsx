@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router"; // Aggiunto useNavigate per sicurezza
+import { Link, useNavigate } from "react-router"; 
 import Search from "./Search";
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
@@ -19,12 +19,12 @@ export default function AppNavbar() {
         };
     }, []);
 
-    // Pulizia dell'email per visualizzare il nome
+    // pulizia email per visualizzare il nome
     const username = user?.signInDetails?.loginId?.split('@')[0] || "Utente";
 
     const handleLogout = async () => {
         await signOut();
-        navigate("/"); // Dopo il logout, riportiamo l'utente alla home (l'Authenticator farà il resto)
+        navigate("/");
     };
 
     return (
@@ -40,7 +40,7 @@ export default function AppNavbar() {
                 <Search onSave={(newPlace) => console.log("Salvato:", newPlace)} />
             </div>
 
-            {/* Versione Desktop */}
+            {/* desktop*/}
             <div className="dropdown col-md-4 col-2 text-end account-container text-center">
                 <div 
                     className="dropdown-toggle txtWhite" 
@@ -70,7 +70,7 @@ export default function AppNavbar() {
                 )}
             </div>
 
-            {/* Versione Mobile (Responsive) */}
+            {/* versione mobile  */}
             <div className="dropdown col-md-4 col-2 account-container-resp text-center ">
                 <div 
                     className="dropdown-toggle txtWhite" 

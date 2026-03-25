@@ -8,7 +8,7 @@ export default function Map({ savedPlaces, setSavedPlaces }) {
   const { collections, selectedCollections, handleCollectionChange, handleDeleteCollection } = useContext(CollectionsContext);
   const mapRef = useRef(null);
 
-  // Utilizziamo direttamente savedPlaces dalle props
+  // utilizzo direttamente savedPlaces dalle props
   const places = savedPlaces;
 
   const getMarkerColor = (collectionId) => {
@@ -25,7 +25,6 @@ export default function Map({ savedPlaces, setSavedPlaces }) {
     });
   };
 
-  // Da aggiungere dentro Map.jsx se vuoi l'auto-centramento
   useEffect(() => {
     if (places.length > 0 && mapRef.current) {
       const validPlaces = places.filter(p => selectedCollections.includes(p.collectionID));
@@ -35,7 +34,7 @@ export default function Map({ savedPlaces, setSavedPlaces }) {
       }
     }
   }, [places, selectedCollections]);
-  
+
   useEffect(() => {
     const handleScrollToMarker = (event) => {
       const placeId = event.detail;
@@ -82,13 +81,12 @@ export default function Map({ savedPlaces, setSavedPlaces }) {
         <MapContainer ref={mapRef} center={[42, 12]} zoom={5} style={{ height: "500px", width: "100%" }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {places
-            // ATTENZIONE: Usa collectionID (CamelCase) come definito nel nostro schema AWS!
+
             .filter(place => selectedCollections.includes(place.collectionID))
             .map((place) => (
               <Marker
                 key={place.id}
                 position={[place.latitude, place.longitude]}
-                // ATTENZIONE: Usa collectionID (CamelCase) anche qui!
                 icon={createCustomDivIcon(getMarkerColor(place.collectionID))}
               >
                 <Popup>{place.name}</Popup>

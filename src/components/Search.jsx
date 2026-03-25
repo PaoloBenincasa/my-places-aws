@@ -5,12 +5,10 @@ import CollectionsContext from "../context/CollectionsContext";
 import { toast } from 'react-toastify';
 import MuiModal from "./MuiModal";
 
-// --- INIZIO IMPORT AWS ---
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { createSavedPlace, deleteSavedPlace } from '../graphql/mutations';
 import { getCollection, listSavedPlaces } from '../graphql/queries';
-// --- FINE IMPORT AWS ---
 
 const client = generateClient();
 
@@ -31,7 +29,6 @@ const searchPlaceByName = async (query) => {
 };
 
 export default function Search() {
-    // Sostituiamo il SessionContext e la fetch di supabase con il super-hook di AWS
     const { user } = useAuthenticator((context) => [context.user]);
 
     const [query, setQuery] = useState("");
@@ -108,7 +105,7 @@ export default function Search() {
         const placeName = place.display_name;
 
         try {
-            // 1. Recupero la collezione selezionata e i suoi vincoli (exclusive_with)
+            // 1. recupero la collezione selezionata e i suoi vincoli (exclusive_with)
             const collectionResponse = await client.graphql({
                 query: getCollection,
                 variables: { id: collectionId }
@@ -116,9 +113,9 @@ export default function Search() {
             const selectedCollection = collectionResponse.data.getCollection;
             const exclusive_with = selectedCollection?.exclusive_with || [];
 
-            // 2. Controllo l'esclusività
+            // 2. controllo l'esclusività
             for (const exclusiveCollectionId of exclusive_with) {
-                // Cerco se questo posto esiste già in una collezione esclusiva
+                // cerco se questo posto esiste già in una collezione esclusiva
                 const existingPlacesResponse = await client.graphql({
                     query: listSavedPlaces,
                     variables: {
@@ -145,15 +142,14 @@ export default function Search() {
                 }
             }
 
-            // 3. Salvo il nuovo posto nella collezione desiderata
+            // 3. salvo il nuovo posto nella collezione desiderata
             const newPlaceInput = {
                 name: placeName,
                 latitude: parseFloat(place.lat),
                 longitude: parseFloat(place.lon),
-                collectionID: collectionId // Attenzione: in AWS è collectionID con la 'ID' maiuscola come definito nello schema
+                collectionID: collectionId 
             };
 
-            // Versione corretta
             const response = await client.graphql({
                 query: `
         mutation CreateSavedPlace($input: CreateSavedPlaceInput!) {

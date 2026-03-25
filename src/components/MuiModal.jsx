@@ -10,15 +10,12 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { Link } from 'react-router';
 
-// --- INIZIO IMPORT AWS ---
 import { useAuthenticator } from '@aws-amplify/ui-react';
-// --- FINE IMPORT AWS ---
 
 function MuiModal({ open, onClose, selectedPlace, collections, onSave }) {
     const [selectedCollection, setSelectedCollection] = useState('');
     const anchorRef = useRef(null);
     
-    // Al posto di session, usiamo AWS per sapere se l'utente è loggato
     const { user } = useAuthenticator((context) => [context.user]);
 
     // gestisco il salvataggio eseguendo le istruzioni impostate in search
@@ -28,7 +25,7 @@ function MuiModal({ open, onClose, selectedPlace, collections, onSave }) {
             return;
         }
         
-        // Trovo l'oggetto completo della raccolta a partire dall'ID selezionato
+        // trovo l'oggetto completo della raccolta a partire dall'ID selezionato
         const collectionObj = collections.find(c => c.id === selectedCollection);
 
         if (onSave && collectionObj) {
@@ -111,7 +108,7 @@ function MuiModal({ open, onClose, selectedPlace, collections, onSave }) {
                             type="button"
                             className="btn-search btn"
                             onClick={handleSavePlace}
-                            // Bottone disabilitato se non hai selezionato la raccolta
+                            // bottone disabilitato se non ho selezionato la raccolta
                             style={{ opacity: !selectedCollection ? 0.5 : 1, pointerEvents: !selectedCollection ? 'none' : 'auto' }}
                         >
                             Salva

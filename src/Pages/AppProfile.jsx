@@ -2,15 +2,13 @@ import { useEffect, useState, useContext, useRef } from "react";
 import Map from "../components/Map";
 import CreateCollectionForm from "../components/CreateCollectionForm";
 import CollectionsContext from "../context/CollectionsContext";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
-// --- INIZIO IMPORT AWS ---
+
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { listSavedPlaces, listCollections, getSavedPlace } from '../graphql/queries';
-import { deleteSavedPlace as deleteSavedPlaceMutation } from '../graphql/mutations';
-// --- FINE IMPORT AWS ---
+
 
 const client = generateClient();
 
@@ -25,7 +23,7 @@ export default function AppProfile() {
     const [searchTerm, setSearchTerm] = useState("");
     const { collections, setCollections } = useContext(CollectionsContext);
 
-    // Recupero i luoghi salvati
+    // recupero i luoghi salvati
     useEffect(() => {
         if (user) {
             const fetchSavedPlaces = async () => {
@@ -44,7 +42,7 @@ export default function AppProfile() {
         }
     }, [user]);
 
-    // Recupero le collections dell'utente
+    // recupero le collections dell'utente
     useEffect(() => {
         if (user) {
             const fetchCollections = async () => {
@@ -62,24 +60,23 @@ export default function AppProfile() {
         }
     }, [user, setCollections]);
 
-    // --- NUOVA LOGICA DI FILTRAGGIO ---
-    // 1. SICUREZZA: Teniamo SOLO i luoghi la cui raccolta esiste ancora nel Context
+   
+    // tengo solo i luoghi la cui raccolta esiste ancora nel Context
     const validPlaces = savedPlaces.filter(place => 
         collections.some(c => c.id === place.collectionID)
     );
 
-    // 2. Filtro per la Mappa (usa validPlaces)
+    
     const filteredPlaces = selectedCollections.length > 0
         ? validPlaces.filter(place => selectedCollections.includes(place.collectionID))
         : validPlaces;
 
-    // Elimino un luogo
-    // Elimino un luogo (Versione corretta anti-crash)
+    // eliminazione luogo
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo luogo?");
         if (confirmDelete) {
             try {
-                // 1. Definiamo noi la mutazione chiedendo indietro SOLO l'id
+                // definisco la mutazione dall'id
                 const customDeleteMutation = `
                     mutation DeleteSavedPlace($input: DeleteSavedPlaceInput!) {
                         deleteSavedPlace(input: $input) {
@@ -88,13 +85,13 @@ export default function AppProfile() {
                     }
                 `;
 
-                // 2. Chiamiamo AWS con la nostra mutazione personalizzata
+                // comunico ad aws la mutazione
                 await client.graphql({
                     query: customDeleteMutation,
                     variables: { input: { id: id } }
                 });
                 
-                // 3. Rimuoviamo il luogo dall'interfaccia
+                // tolgo il luogo dall'interfaccia
                 setSavedPlaces((prev) => prev.filter((place) => place.id !== id));
                 toast.success("Luogo eliminato con successo! 🗑️");
             } catch (error) {
@@ -136,14 +133,13 @@ export default function AppProfile() {
         });
     };
     
-    // 3. Filtro per la lista in basso (usa validPlaces)
+    // filtro per la lista in basso 
     const filteredPlacesList = selectedCollectionsFilter.length > 0
         ? validPlaces.filter(place =>
             selectedCollectionsFilter.includes(place.collectionID) &&
             place.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
         : validPlaces.filter(place => place.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    // --- FINE NUOVA LOGICA ---
 
    // Hook di comunicazione con Search.jsx
     useEffect(() => {
@@ -290,18 +286,7 @@ export default function AppProfile() {
                     })}
                 </ul>
             </div>
-            <ToastContainer 
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={true}    
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
+           
         </div>
     );
 }

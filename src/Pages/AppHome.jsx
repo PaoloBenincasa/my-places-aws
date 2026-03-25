@@ -1,21 +1,18 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router";
 import 'animate.css';
-import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
-// --- INIZIO IMPORT AWS ---
 import { useAuthenticator } from '@aws-amplify/ui-react';
-// --- FINE IMPORT AWS ---
 
 export default function AppHome() {
-    // Usiamo AWS per controllare l'utente (anche se qui dentro sarà sempre loggato grazie all'Authenticator in App.jsx)
+  
     const { user } = useAuthenticator((context) => [context.user]);
     
     const infoRef = useRef(null);
     const navigate = useNavigate();
 
     const handleClick = () => {
-        // Se arrivi qui sei già loggato tramite AWS, quindi andiamo dritti alla mappa!
         navigate("/profile");
         window.scrollTo(0, 0);
     };
